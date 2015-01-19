@@ -1,0 +1,16 @@
+REFERENCE VARIABLES
+Efficiency (E)
+Home Position (HP)
+Opponent Position (OP)
+
+STATIC VARIABLES
+Base (B) = 100
+Position Coeficient (p) = 10
+
+DERIVED VARIABLES
+Position Offset(PO) = (HB-OP)
+
+-----------------------------------
+SINGLE ATTACK EFFICIENCY FORMULA
+-----------------------------------
+E = B+(PO*p)+[(N+(PO*s)]*p
