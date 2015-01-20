@@ -1,6 +1,6 @@
 <?php
 //test class for the COCE main class
-require_once('../inc/class.coce.php');
+require_once('../app/controllers/class.coce.php');
 
 class TestCOCE extends PHPUnit_FrameWork_TestCase{
 
