@@ -1,5 +1,4 @@
 <?php
-//error_reporting(0);
 /*
  * Main class of COCe
  * Author: Lukasz Karpuk
@@ -17,6 +16,7 @@ REFERENCE VARIABLES
 - Position Weight (PW) - this adds more weight to attacker with higer rankings so an attacker ranked
   #3 in the clan will get more value hitting for 3 starts than #14 would for hitting for same 3
 - Clan Size (CS) - number of people in clan war
+- War Efficiency (WE) - efficiency for war based on all attacks
 
 STATIC VARIABLES
 - Base (B) = 100 by default
@@ -47,6 +47,7 @@ PW = 1+(1-log(CS)*HP)/10;
      private $PO = 0; //position offset used for coefficent
      private $N = 0; //number of stars gotten for attack
      private $PW = 0; //position weight 
+     private $WE = 0; //war efficiency average
      public static $B = 100; //base variable
      public static $p = 10; //static coefficient  
      public static $n = 3; //sets how many stars equals base value of 100
@@ -89,10 +90,33 @@ PW = 1+(1-log(CS)*HP)/10;
             //instead of a negative score
             if($this->E1 <= $this->N) $this->E1 = $this->N;
              
-            //return final value.. 
+            //return final value...
             return $this->E1;
         }
      }
+
+    public function getWarEfficiency($score1 = 0, $score2 = 0, $attackPenalty = true){
+        //do some error checking first    
+        if($score1 === 0 && $score2 === 0){
+            $this->showError(3);
+        }        
+        //attack penalty refers to penalizing attacker for not doing second attack
+        if($attackPenalty === true){
+            if($score2 === 0){
+                $this->WE = $score1/2;
+            }else{
+                $this->WE = ($score1+$score2)/2;
+            } 
+        }else{
+            if($score2 == 0){
+                $this->WE = $score1;
+            }else{
+                $this->WE = ($score1+$score2)/2;
+            } 
+        }
+        
+        return $this->WE;
+    }
      
      /*
       * Error class to throw class-level excemptions
@@ -103,8 +127,11 @@ PW = 1+(1-log(CS)*HP)/10;
              case 1:
                  $msg .= "Wrong parameters passed for 'Single Attack Efficiency' calculation.";                
                  break;
-             case 1:
+             case 2:
                  $msg .= "To get a weighted ranking, you must input the size of the clan.";                
+                 break;
+             case 3:
+                 $msg .= "Wrong number of parameters passed to war efficiency calculation.";                
                  break;
              default:
                  $msg .= "Issue processing request";
