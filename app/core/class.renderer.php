@@ -3,7 +3,7 @@
  * Simple render class to output data back to front-end
  */
  
-class Renderer{
+class Renderer extends Error{
     
    public function __construct(){
        //do nothing for now...
@@ -41,7 +41,7 @@ class Renderer{
                break;
        }
        
-       throw new Exception($msg, 1);
+       $this->throwError($msg);
    }
 }
 

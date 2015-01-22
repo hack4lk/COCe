@@ -7,18 +7,26 @@
 /*
  * This the main config file for the application as well as other core files
  */ 
-require_once('core/config.php'); 
-require_once('core/class.router.php');
-require_once('core/class.renderer.php');
-require_once('core/interface.controller.php');
-/*
- * The main/core class file which does all the efficiency calculations
- */
-require_once('core/class.coce.php');
+require('core/config.php'); 
+require('core/class.error.php');
+require('core/class.router.php');
+require('core/class.renderer.php');
+require('core/class.controller.php');
+require('core/class.filemanager.php');
 
 /*
- * The main data manager class that deals with reading and writing to disk
+ * The class does all the efficiency calculations
  */
-require_once('models/class.datamanager.php');
+require('core/class.coce.php');
 
+/*
+ * The main model of the application. We autoload this becuse it's used frequently in the app
+ */
+require('models/class.datamanager.php');
+
+
+/*
+ * All helper functions which you want to autoload get loaded below
+ */
+ require('helpers/class.url.php');
 ?>

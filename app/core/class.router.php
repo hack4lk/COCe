@@ -3,7 +3,7 @@
  * Router class to process requests sent to backend API
  */
 
-class Router{
+class Router extends Error{
     
     private $fileName = "";
     private $methodName = "";
@@ -33,13 +33,14 @@ class Router{
                     $obj->$finalMethod();
                 }else{
                     $msg = "Method '" . $this->methodName . "' of Class '" . $this->fileName . "' not found.";
-                    throw new Exception($msg , 1);
-                    die();
+                    $this->throwError($msg);
                 }
+            }else{
+                $obj->index();
             }
               
         }else{
-           throw new Exception("The specified application path does not exist.", 1);
+           $this->throwError('The specified application path does not exist.');
            
         }
     }

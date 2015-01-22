@@ -1,6 +1,6 @@
 <?php
 /*
- * Main class of COCe
+ * Main class of COCe (Clash of Clans Efficiency)
  * Author: Lukasz Karpuk
  * URL: www.lukaszkarpuk.me
  * (C)2015 MIT License
@@ -37,7 +37,7 @@ POSITION WEIGHT FORMULA
 PW = 1+(1-log(CS)*HP)/10;
 */
  
- class COCE{
+ class COCE extends Error{
      
      private $CS = 0; //Clan size (number of people in clan war)
      private $E1 = 0; //effectiveness for single attack
@@ -104,12 +104,16 @@ PW = 1+(1-log(CS)*HP)/10;
         if($attackPenalty === true){
             if($score2 === 0){
                 $this->WE = $score1/2;
+            }else if($score1 === 0){
+                $this->WE = $score2/2;   
             }else{
                 $this->WE = ($score1+$score2)/2;
             } 
         }else{
             if($score2 == 0){
                 $this->WE = $score1;
+            }else if($score1 == 0){
+                $this->WE = $score2;
             }else{
                 $this->WE = ($score1+$score2)/2;
             } 
@@ -138,7 +142,7 @@ PW = 1+(1-log(CS)*HP)/10;
                  break;
          }
          
-         throw new Exception($msg, 1);
+         $this->throwError($msg);
          exit();
      }
  }
