@@ -17,7 +17,13 @@ class SingleWar extends CONTROLLER{
             $date = $_GET['date'];
             if($date != ""){
                 //use datamanager and output to output data
-                $result = $this->dataManager->getDataForSpecificWar($date);
+                if(isset($_GET['showstats']) && $_GET['showstats'] == 'true' ){
+                    $fullName = $date . "_stats";
+                    $result = $this->dataManager->getDataForSpecificWar($fullName);
+                }else{
+                    $result = $this->dataManager->getDataForSpecificWar($date);    
+                }
+                
                 if(!$result){
                     $this->throwError("war file not found or is empty");
                 }
