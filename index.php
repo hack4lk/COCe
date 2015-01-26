@@ -115,20 +115,18 @@
                 
                 <div class="row">
                     <div class="col-md-12" style="border-top: 1px solid gray; margin:25px 0; padding-top:20px">
-                        <a class="btn btn-default" onclick="app.getSingleWarFile('1-20-2015', 'true')">load war (1-20-2015)</a>&nbsp;&nbsp;
-                        <a class="btn btn-default" onclick="app.getSingleWarFile('1-20-2015')">load war (1-20-2015) (no stats)</a>&nbsp;&nbsp;
-                        <a class="btn btn-default" onclick="app.getSingleWarFile('1-24-2015', 'true')">load war (1-24-2015)</a>&nbsp;&nbsp;
-                        <a class="btn btn-default" onclick="app.getSingleWarFile('1-28-2015', 'true')">load war (1-28-2015)</a>&nbsp;&nbsp;
-                        <a class="btn btn-default" onclick="app.getSingleWarFile('1-31-2015', 'true')">load war (1-31-2015)</a>&nbsp;&nbsp;
-                        <a class="btn btn-default" onclick="app.getSingleWarFile('2-3-2015', 'true')">load war (2-3-2015)</a>&nbsp;&nbsp;
+                        <a class="btn btn-default" onclick="app.getSingleWarFile('1-23-2015', 'true')">load war (1-23-2015)</a>&nbsp;&nbsp;
+                        <a class="btn btn-default" onclick="app.getSingleWarFile('1-25-2015', 'true')">load war (1-25-2015)</a>&nbsp;&nbsp;
+                        <a class="btn btn-default" onclick="app.getSingleWarFile('1-23-2015', 'false')">load war (1-23-2015) - no stats</a>&nbsp;&nbsp;
+                        <a class="btn btn-default" onclick="app.getSingleWarFile('1-25-2015', 'false')">load war (1-25-2015) - no stats</a>&nbsp;&nbsp;
                     </div>
                 </div>
                 
                 <div class="row">
                     <div class="col-md-12">
                         <select id="warDate">
-                            <option value="1-20-2015">1-20-2015</option>
-                            <option value="1-24-2015">1-24-2015</option>
+                            <option value="1-20-2015">1-23-2015</option>
+                            <option value="1-24-2015">1-25-2015</option>
                         </select>
                          <select id="singleWarDataMetric">
                             <option value="max">Maximums</option>
@@ -149,8 +147,40 @@
                      </div>
                 </div>
                 
+                <div class="row" class="col-md-12" style="border-top: 1px solid gray; margin:25px 0; padding-top:20px">
+                    <div class="col-md-12">
+                        <select id="warTableAvgMax">
+                            <option value="max">Max Values</option>
+                            <option value="avg">Average Values</option>
+                        </select>
+                        <a class="btn btn-default" onclick="runMethod('createAllWarTableData', 'warTableAvgMax')">Load table data for all wars</a>
+                    </div>
+                    
+                    <div class="col-md-12" style="margin-top:15px;">
+                        <select id="warSingleDate">
+                            <option value="1-20-2015">1-23-2015</option>
+                            <option value="1-24-2015">1-25-2015</option>
+                        </select>
+                         <select id="singleWarTableDataMetric">
+                            <option value="max">Maximums</option>
+                            <option value="avg">Averages</option>
+                            <option value="values">Individual Clan Members</option>
+                        </select>
+                        <a class="btn btn-default" onclick="runMethod('createSingleWarTableData', 'warSingleDate', 'singleWarTableDataMetric')">Load table data for specific war</a>
+                    </div>
+                    
+                    <div class="col-md-12" style="margin-top:15px;">
+                        <select id="warSingleDate2">
+                            <option value="1-20-2015">1-23-2015</option>
+                            <option value="1-24-2015">1-25-2015</option>
+                        </select>
+                        <a class="btn btn-default" onclick="runMethod('createSingleWarTableDataNoStats', 'warSingleDate2')">Load non-stat data for specific war</a>
+                    </div>
+                </div>
+                
             </div>
             <div id="chartOutput"></div>
+            <div id="chartOutputTable"></div>
         <form action="app/?task=singlewar&method=saveWarData" method="post" enctype="multipart/form-data">
             Select image to upload:
             <input type="file" name="warDataFile" id="warDataFile">

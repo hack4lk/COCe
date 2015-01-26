@@ -11,7 +11,7 @@ var App = function(){
     that.init = function(){
         that.charts = new Charts();
         //on initialization, load the libraries and grab general war stats
-        google.load('visualization', '1.0', {'packages':['corechart']});
+        google.load('visualization', '1.0', {'packages':['corechart', 'table']});
         google.setOnLoadCallback(that.getMasterData);
     };
     
@@ -30,7 +30,6 @@ var App = function(){
     that.createSingleWarColChartStats = function(dateOfWar, statsType, singleMetric){
         var dataArray = [];
         dataArray = that.charts.formatChartData('warSingleWarCol', that.singleChartData, statsType, singleMetric);
-        console.log(dataArray);
          // Set chart options
         var options = {
            'title':     'Clan effectiveness for war on ' + dateOfWar,
@@ -117,6 +116,52 @@ var App = function(){
         
         //render function of the charts clas to output chart to specified div
         that.charts.renderColumnChart(dataArray, 'chartOutput', options);
+    };
+    
+    that.createAllWarTableData = function(AvgMax){
+        var dataArray = [];
+        var parameters = AvgMax;
+        dataArray = that.charts.formatChartData('warStatsTable', that.chartData, parameters); 
+        
+        // Set chart options
+        var options = {
+           'title':     'Clan Effectiveness (E) per War - ' + AvgMax,
+           'width':     chartWidth,
+           'height':    chartHeight,
+        };
+        
+        //render function of the charts clas to output chart to specified div
+        that.charts.renderTableChart(dataArray, 'chartOutputTable', options); 
+    };
+    
+    that.createSingleWarTableData = function(dateOfWar, statsType){
+        var dataArray = [];
+        dataArray = that.charts.formatChartData('warStatsSingleTable', that.singleChartData, statsType);
+        
+        // Set chart options
+        var options = {
+           'title':     'Clan Effectiveness (E) for War',
+           'width':     chartWidth,
+           'height':    chartHeight,
+        };
+        
+        //render function of the charts clas to output chart to specified div
+        that.charts.renderTableChart(dataArray, 'chartOutputTable', options); 
+    };
+    
+    that.createSingleWarTableDataNoStats = function(dateOfWar){
+        var dataArray = [];
+        dataArray = that.charts.formatChartData('warStatsSingleTableNoStats', that.singleChartData);
+        
+        // Set chart options
+        var options = {
+           'title':     'Clan Effectiveness (E) for War',
+           'width':     chartWidth,
+           'height':    chartHeight,
+        };
+        
+        //render function of the charts clas to output chart to specified div
+        that.charts.renderTableChart(dataArray, 'chartOutputTable', options); 
     };
     
     /*

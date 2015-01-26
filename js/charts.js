@@ -35,10 +35,131 @@ var Charts = function(){
             case 'warSingleWarCol':
                 return createWarSingleCol(passedParameter, passedParameter2);
                 break;
+            case 'warStatsTable':
+                return createWarsTable(passedParameter);
+                break;
+            case 'warStatsSingleTable':
+                return createSingleWarTable(passedParameter);
+                break;
+            case 'warStatsSingleTableNoStats':
+                return createSingleWarTableNoStats();
+                break;
             default:
                 //do nohting...
                 break;
         }    
+    };
+    
+    var createWarsTable = function(targetData){
+        var tempArray = []; 
+        var prefix = "";
+        var arrayRefKey= "";
+        
+        if(targetData == 'avg'){
+            prefix = "Avg. ";
+            arrayRefKey = "__Averages__";
+            tempArray.push(['War Date', 'Avg. Single', 'Avg. Single(w)', 'Avg. War', 'Avg. War(w)', 'Avg. War No Penalty', "Avg. War(w) No Penalty"]);
+        }   
+        if(targetData == 'max'){
+            prefix = "Max ";
+            arrayRefKey = "__Maximums__";
+            tempArray.push(['War Date', 'Max Single', 'Max Single(w)', 'Max War', 'Max War(w)', 'Max War No Penalty', "Max War(w) No Penalty"]);
+        }
+        
+         for(var key in that.data){
+            tempArray.push([
+                key, 
+                that.data[key][arrayRefKey]['Single'],
+                that.data[key][arrayRefKey]['wSingle'],
+                that.data[key][arrayRefKey]['War'],
+                that.data[key][arrayRefKey]['wWar'],
+                that.data[key][arrayRefKey]['War_NoP'],
+                that.data[key][arrayRefKey]['wWar_NoP'],
+            ]);
+        }
+        var convertedData = new google.visualization.arrayToDataTable(tempArray);
+        return convertedData;
+    };
+    
+    var createSingleWarTableNoStats = function(){
+        var tempArray = [];
+        tempArray.push(['Clan Member', 'Home Base Position', '# of Stars (Attack 1)', '# of Stars (Attack 2)', 'Opponent #1 Position', 'Opponent #2 Position']);
+            
+        for(var key in that.data){
+            var warData = that.data[key];
+            //console.log(warData);
+            if(key != '__War::Date__'){
+                tempArray.push(
+                    [key, 
+                        that.data[key]['HB'],
+                        that.data[key]['N1'],
+                        that.data[key]['N2'],
+                        that.data[key]['OP1'],
+                        that.data[key]['OP2']
+                    ]);
+            }
+        }
+        
+        var convertedData = new google.visualization.arrayToDataTable(tempArray);
+        return convertedData;
+    };
+    
+    var createSingleWarTable = function(targetData, singleMetric){
+        var tempArray = [];
+        var dataNode = {};
+        var prefix = "";
+        
+        if(targetData == 'avg') prefix = "Avg. ";   
+        if(targetData == 'max') prefix = "Max ";
+        
+        console.log("prefix: " + targetData);
+        
+        if(targetData == "avg" || targetData == "max"){
+            if(targetData == 'avg'){
+                arrayRefKey = "__Averages__";
+            }else if(targetData == 'max'){
+                arrayRefKey = "__Maximums__";
+                
+            }
+            
+            tempArray.push(['Metric', prefix]);
+            
+            for(var key in that.data){
+                tempArray.push([prefix+'Single', that.data[key][arrayRefKey]['Single']]);
+                tempArray.push([prefix+'Single(w)', that.data[key][arrayRefKey]['wSingle']]);
+                tempArray.push([prefix+'War', that.data[key][arrayRefKey]['War']]);
+                tempArray.push([prefix+'War(w)',that.data[key][arrayRefKey]['wWar']]);
+                tempArray.push([prefix+'War No Penalty', that.data[key][arrayRefKey]['War_NoP']]);
+                tempArray.push([prefix+'War(w) No Penalty', that.data[key][arrayRefKey]['wWar_NoP']]);
+            }
+        } 
+        
+        if(targetData == "values"){
+            tempArray.push(['Clan Member', 'Attack 1', 'Attack 1(w)', 'Attack 2', 'Attack 2(w)', 'War', 'War(e)', 'War No Penalty', 'War No Penalty(w)']);
+            
+            for(var key in that.data){
+                var warData = that.data[key];
+                console.log(warData);
+                for(var member in warData){
+                    if(member != "__Averages__" && member != "__Maximums__"){
+                        tempArray.push(
+                            [member, 
+                            warData[member]['E1'],
+                            warData[member]['wE1'],
+                            warData[member]['E2'],
+                            warData[member]['wE2'],
+                            warData[member]['WarE'],
+                            warData[member]['wWarE'],
+                            warData[member]['WarE_NoP'],
+                            warData[member]['wWarE_NoP']
+                        ]);
+                    }
+                }
+            }
+        }
+        
+        var convertedData = new google.visualization.arrayToDataTable(tempArray);
+        return convertedData;
     };
     
     var createWarSingleCol = function(targetData, singleMetric){
@@ -252,6 +373,8 @@ var Charts = function(){
         }
         
         that.chart.draw(that.data, options);
+        $("#" + targetDiv).css("opacity", "0");
+        $("#" + targetDiv).animate({"opacity": 1});
     };
     
     that.renderColumnChart = function(data, targetDiv, options, disableSelection){
@@ -271,8 +394,19 @@ var Charts = function(){
         }
         
         that.chart.draw(that.data, options);
+        $("#" + targetDiv).css("opacity", "0");
+        $("#" + targetDiv).animate({"opacity": 1});
     };
     
+    that.renderTableChart = function(data, targetDiv, options){
+        that.data = data;
+        // Instantiate and draw our chart, passing in some options.
+        that.chart = new google.visualization.Table(document.getElementById(targetDiv));
+      
+        that.chart.draw(that.data, options);
+        $("#" + targetDiv).css("opacity", "0");
+        $("#" + targetDiv).animate({"opacity": 1});
+    };
     
     return that;
 };
