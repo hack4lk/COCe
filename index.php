@@ -4,15 +4,22 @@
         <meta charset="UTF-8" />
         <title>COCe</title>
         <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/jquery-ui.min.css" />
         <script src="js/jquery-1.11.2.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
+        <script src="js/jquery-ui.min.js"></script>
         <script src="js/jsapi.js"></script>
         <script src="js/app.js"></script>
         <script src="js/charts.js"></script>
+        <script src="js/formtools.js"></script>
         <script>
+            //main app class
             var app = new App();
             app.init();
-           
+            //form manipulation class
+            $(document).ready(function(){
+               var formTools =new FormTools();
+               formTools.init('warTableHolder', 'warTable');
+            });
            
             //test js code below
             //method to call sub-methods of the app class
@@ -181,11 +188,25 @@
             </div>
             <div id="chartOutput"></div>
             <div id="chartOutputTable"></div>
-        <form action="app/?task=singlewar&method=saveWarData" method="post" enctype="multipart/form-data">
-            Select image to upload:
-            <input type="file" name="warDataFile" id="warDataFile">
-            <input type="submit" value="Upload Data" name="submit">
-        </form>
+        
+            <div class="row" class="col-md-12" style="border-top: 1px solid gray; margin:25px 0; padding-top:20px">
+                <form action="app/?task=singlewar&method=saveWarData" method="post" enctype="multipart/form-data">
+                    Application Key: <input type="text" id="appkey" name="appkey" /><br />
+                    Select file to upload:
+                    <input type="file" name="warDataFile" id="warDataFile"><br />
+                    <input type="submit" value="Upload Data" name="submit">
+                </form>
+            </div>
+            
+            <div class="row" class="col-md-12" style="border-top: 1px solid gray; margin:25px 0; padding-top:20px">
+            </div>
+            
+            <div id="warTableHolder">
+                <div id="formHeader"></div>
+                <form action="app/?task=singlewar&method=saveWarData&formData=true" method="post" enctype="multipart/form-data" id="warTable"></form>
+            </div>
+            
+            
         </div>
     </body>
     

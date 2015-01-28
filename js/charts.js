@@ -6,6 +6,10 @@ var Charts = function(){
     that.data = null;
     that.parsedData = [];
     that.selectedItem = null;
+    that.avgWarColumns = ['War Date', 'Avg. Single', 'Avg. Single(w)', 'Avg. War', 'Avg. War(w)', 'Avg. War No Penalty', "Avg. War(w) No Penalty"];
+    that.maxWarColumns = ['War Date', 'Max Single', 'Max Single(w)', 'Max War', 'Max War(w)', 'Max War No Penalty', "Max War(w) No Penalty"];
+    that.avgWarKey = "__Averages__";
+    that.maxWarKey = "__Maximums__";
     
     that.formatChartData = function(chartType, passedData, passedParameter, passedParameter2){
         //reset parsed data in class
@@ -57,13 +61,13 @@ var Charts = function(){
         
         if(targetData == 'avg'){
             prefix = "Avg. ";
-            arrayRefKey = "__Averages__";
-            tempArray.push(['War Date', 'Avg. Single', 'Avg. Single(w)', 'Avg. War', 'Avg. War(w)', 'Avg. War No Penalty', "Avg. War(w) No Penalty"]);
+            arrayRefKey = that.avgWarKey;
+            tempArray.push(that.avgWarColumns);
         }   
         if(targetData == 'max'){
             prefix = "Max ";
-            arrayRefKey = "__Maximums__";
-            tempArray.push(['War Date', 'Max Single', 'Max Single(w)', 'Max War', 'Max War(w)', 'Max War No Penalty', "Max War(w) No Penalty"]);
+            arrayRefKey = that.maxWarKey;
+            tempArray.push(that.maxWarColumns);
         }
         
          for(var key in that.data){
@@ -116,9 +120,9 @@ var Charts = function(){
         
         if(targetData == "avg" || targetData == "max"){
             if(targetData == 'avg'){
-                arrayRefKey = "__Averages__";
+                arrayRefKey = that.avgWarKey;
             }else if(targetData == 'max'){
-                arrayRefKey = "__Maximums__";
+                arrayRefKey = that.maxWarKey;
                 
             }
             
@@ -141,7 +145,7 @@ var Charts = function(){
                 var warData = that.data[key];
                 console.log(warData);
                 for(var member in warData){
-                    if(member != "__Averages__" && member != "__Maximums__"){
+                    if(member != that.avgWarKey && member != that.maxWarKey){
                         tempArray.push(
                             [member, 
                             warData[member]['E1'],
@@ -174,9 +178,9 @@ var Charts = function(){
         
         if(targetData == "avg" || targetData == "max"){
             if(targetData == 'avg'){
-                arrayRefKey = "__Averages__";
+                arrayRefKey = that.avgWarKey;
             }else if(targetData == 'max'){
-                arrayRefKey = "__Maximums__";
+                arrayRefKey = that.maxWarKey;
                 
             }
             
@@ -199,7 +203,7 @@ var Charts = function(){
                 var warData = that.data[key];
                 
                 for(var member in warData){
-                    if(member != "__Averages__" && member != "__Maximums__"){
+                    if(member != that.avgWarKey && member != that.maxWarKey){
                         tempArray.push([member, warData[member][singleMetric]]);
                     }
                 }
@@ -218,18 +222,18 @@ var Charts = function(){
         var tempArray = [];
         
         if(targetDataNode.avgmax1 == 'avg'){
-            arrayRefKey1 = "__Averages__";
+            arrayRefKey1 = that.avgWarKey;
             prefix1 = "Avg.";
         }else if(targetDataNode.avgmax1 == 'max'){
-            arrayRefKey1 = "__Maximums__";
+            arrayRefKey1 = that.maxWarKey;
             prefix1 = "Max";
         }
         
         if(targetDataNode.avgmax2 == 'avg'){
-            arrayRefKey2 = "__Averages__";
+            arrayRefKey2 = that.avgWarKey;
             prefix2 = "Avg.";
         }else if(targetDataNode.avgmax2 == 'max'){
-            arrayRefKey2 = "__Maximums__";
+            arrayRefKey2 = that.maxWarKey;
             prefix2 = "Max";
         }
         
@@ -260,9 +264,9 @@ var Charts = function(){
         dataNode = setObjTitleParam(targetDataNode, prefix);
         
         if(AvgMax == 'avg'){
-            arrayRefKey = "__Averages__";
+            arrayRefKey = that.avgWarKey;
         }else if(AvgMax == 'max'){
-            arrayRefKey = "__Maximums__";
+            arrayRefKey = that.maxWarKey;
         }
         tempArray.push(['Date', dataNode.title]);
         
@@ -282,10 +286,10 @@ var Charts = function(){
         var arrayRefKey = "";
         
         if(AvgMax == 'avg'){
-            arrayRefKey = "__Averages__";
+            arrayRefKey = that.avgWarKey;
             tempArray.push(['Date', 'Avg. Single', 'Avg. Single(w)', 'Avg. War', 'Avg. War(w)', 'Avg. War No Penalty', "Avg. War(w) No Penalty"]);    
         }else if(AvgMax == 'max'){
-            arrayRefKey = "__Maximums__";
+            arrayRefKey = that.maxWarKey;
             tempArray.push(['Date', 'Max Single', 'Max Single(w)', 'Max War', 'Max War(w)', 'Max War No Penalty', "Max War(w) No Penalty"]);
         }
         

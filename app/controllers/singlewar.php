@@ -5,6 +5,7 @@ class SingleWar extends CONTROLLER{
     private $dataManager;
     private $view;
     private $url;
+    private $warData;
     
     public function __construct(){
        $this->dataManager = new DataManager();
@@ -43,42 +44,59 @@ class SingleWar extends CONTROLLER{
     }
     
     public function saveWarData(){
-        $data = "";
+        //check if api key is passed and is valid otherwise throw error
+        if(!isset($_POST['appkey']) || $_POST['appkey'] == ""){
+            $this->throwError("Upload Failed. Application key not provided.");
+        }else if($_POST['appkey'] != AUTH_TOKEN){
+            $this->throwError("Application key is not valid!");
+        }
         
-        //$this->url->redirect('app/?task=singlewar&date=1-20-2015');
-        
-        if(!isset($_FILES['warDataFile']) || $_FILES['warDataFile']["name"] == ""){
-            $this->throwError("No file passed");
+        //check to see if we're uploading a war data file or passing in form information...
+        if(isset($_GET['formData']) && $_GET['formData'] == 'true'){
+            //this means we're passing in form information instead of uploading war log file
+            if($this->verifyWarData("form")){
+                $this->url->redirect("index.php?update=success");
+            }
         }else{
-            $tmpFileData = file_get_contents($_FILES["warDataFile"]["tmp_name"]);
-            
-            $verifiedData = $this->dataManager->checkAndFormatData($tmpFileData);
-            
-            if(!$verifiedData){
-                $this->throwError('Data format incompatible.');
+            $file = pathinfo($_FILES["warDataFile"]["name"]);
+            $fileext = strtolower($file['extension']);   
+    
+            if(!isset($_FILES['warDataFile']) || $_FILES['warDataFile']["name"] == "" || $fileext != 'csv'){
+                $this->throwError("No file or wrong file format passed");
             }else{
-                if($this->dataManager->setDataForSpecificWar($verifiedData)){
-                    //if everything was ok, update the main
-                    //stats file
-                    if($this->dataManager->setStatsForSpecificWar($verifiedData)){
-                        $this->url->redirect("index.php?update=success");
-                    }else{
-                        $this->throwError("Could not update war data.");
-                    }
-                }else{
-                    $this->throwError("Could not save data file. Please check folder permissions.");
+                $this->warData = file_get_contents($_FILES["warDataFile"]["tmp_name"]);
+                
+                if($this->verifyWarData("file")){
+                    $this->url->redirect("index.php?update=success");
                 }
             }
         }
+    }
+
+    private function verifyWarData($dataSource){
+        $verifiedData = null;
         
-        
-        $result = "";
-        //$result = $this->dataManager->setDataForSpecificWar($data);
-        
-        //no need to load anything into view here. we return error or true  
-        if(!$result){
-            $result = "Error saving war data. Please check your file and try again.";
-        }     
+        if($dataSource == "file"){
+            $verifiedData = $this->dataManager->checkAndFormatDataFromFile($this->warData);
+        }else if($dataSource == "form"){
+            $verifiedData = $this->dataManager->checkAndFormatDataFromForm($this->warData);
+        }
+            
+        if(!$verifiedData){
+            $this->throwError('Data format incompatible.');
+        }else{
+            if($this->dataManager->setDataForSpecificWar($verifiedData)){
+                //if everything was ok, update the main
+                //stats file
+                if($this->dataManager->setStatsForSpecificWar($verifiedData)){
+                    return true;
+                }else{
+                    $this->throwError("Could not update war data.");
+                }
+            }else{
+                $this->throwError("Could not save data file. Please check folder permissions.");
+            }
+        }
     }
 }
 ?>

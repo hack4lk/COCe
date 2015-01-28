@@ -39,7 +39,7 @@ class DataManager extends FileManager{
     
     //this method checks the integrity of the csv file
     //being loaded to make sure data is in correct format
-    public function checkAndFormatData($rawData){
+    public function checkAndFormatDataFromFile($rawData){
         $data = explode("\r", $rawData);
         
         if(count($data) === 1){
@@ -77,6 +77,48 @@ class DataManager extends FileManager{
             }
             return $finalData;
         }
+    }
+
+    public function checkAndFormatDataFromForm($rawData){
+        /*
+        $data = explode("\r", $rawData);
+        
+        if(count($data) === 1){
+            $data = explode("\n", $rawData);
+        }
+        
+        if(count($data) === 1){
+            return false;   
+        }
+        
+        $date = explode(",", $data[0]);
+        $finalData = array();
+        
+        if(!preg_match("/^[0-9]+\/[0-9]+\/[0-9]+$/", $date[0])){
+            return false;
+        }else{
+            //convert data to dash instead of forward slash
+            $tempDate = $date[0];
+            $tempDate = str_replace("/", "-", $date[0]);
+            $finalData['__War::Date__'] = $tempDate;
+            
+            
+            foreach($data as $key =>$val){
+               $row = explode(",", $val);
+                
+               if(isset($row[1] ) && $row[1] != "" && preg_match("/^[0-9]+$/", $row[1]) ){
+                   $finalData[$row[0]] = array(
+                        'HB'    => $row[1],
+                        'OP1'   => $row[2],
+                        'OP2'   => $row[3],
+                        'N1'    => $row[4],
+                        'N2'    => $row[5]
+                   );
+               }
+            }
+            return $finalData;
+        }
+         */
     }
     
     public function setDataForSpecificWar($arrayData = ""){
